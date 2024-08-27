@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Animated Text and Image with Music</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            @keyframes zoom1 {
+                0% {
+                    background-size: 100%;
+                }
+                100% {
+                    background-size: 115%;
+                }
+            }
+
+            @keyframes zoom2 {
+                0% {
+                    background-size: 115%;
+                }
+                100% {
+                    background-size: 130%;
+                }
+            }
+
+            @keyframes zoom3 {
+                0% {
+                    background-size: 130%;
+                }
+                100% {
+                    background-size: 125%;
+                }
+            }
+
+            @keyframes zoom4 {
+                0% {
+                    background-size: 125%;
+                }
+                100% {
+                    background-size: 105%;
+                }
+            }
+
+            @keyframes zoom5 {
+                0% {
+                    background-size: 105%;
+                }
+                100% {
+                    background-size: 135%;
+                }
+            }
+
+            .zoom-1 {
+                animation: zoom1 1s ease-in-out forwards;
+            }
+
+            .zoom-2 {
+                animation: zoom2 1s ease-in-out forwards;
+            }
+
+            .zoom-3 {
+                animation: zoom3 1s ease-in-out forwards;
+            }
+
+            .zoom-4 {
+                animation: zoom4 1s ease-in-out forwards;
+            }
+
+            .zoom-5 {
+                animation: zoom5 1s ease-in-out forwards;
+            }
+
+            .bg-image {
+                background-image: url("background.jpg");
+                background-position: bottom center;
+            }
+
+            .letter-button {
+                width: 100px;
+                height: 100px;
+                transition: transform 0.3s ease;
+            }
+
+            .letter-button:hover {
+                transform: scale(1.2);
+            }
+
+            .text-container,
+            .button-options button {
+                font-weight: bold;
+                font-family: 'Arial', sans-serif;
+            }
+
+            .letter-text {
+                color: white;
+                font-size: 1.25rem;
+                margin-top: 10px;
+                font-weight: bold;
+                font-family: 'Arial', sans-serif;
+            }
+        </style>
+    </head>
+    <body
+        class="w-full h-screen flex items-center justify-center bg-black relative overflow-hidden"
+    >
+        <div
+            class="absolute inset-0 transition-all duration-1000 bg-black bg-image"
+            id="background"
+        ></div>
+        <div
+            class="absolute inset-0 bg-gradient-to-b from-black to-transparent z-10"
+        ></div>
+
+        <div
+            class="relative z-20 text-center w-11/12 md:w-8/12 lg:w-7/12"
+            style="transform: translateY(-10%)"
+        >
+            <img
+                class="letter-button mx-auto cursor-pointer"
+                src="letter.png"
+                alt="Click Me"
+                onclick="animateSequence()"
+            />
+            <div class="letter-text">Klik Pesannya</div>
+
+            <img
+                id="image-container"
+                class="image-container w-36 h-36 mx-auto mt-5 opacity-0 transform scale-0 transition-all duration-500"
+                src="https://via.placeholder.com/150"
+                alt="Placeholder Image"
+            />
+            <div
+                class="text-container text-white text-2xl mt-4 opacity-0 transition-opacity duration-500"
+            ></div>
+            <div
+                class="button-options mt-5 space-x-4 opacity-0 transition-opacity duration-500"
+            >
+                <button
+                    id="btn-mau"
+                    class="bg-green-500 text-white py-2 px-4 rounded"
+                    onclick="acceptProposal()"
+                >
+                    Mau
+                </button>
+                <button
+                    id="btn-ngga"
+                    class="bg-red-500 text-white py-2 px-4 rounded"
+                    onclick="rejectProposal()"
+                >
+                    Ngga
+                </button>
+            </div>
+        </div>
+
+        <audio id="background-music" src="music.mp3" type="audio/mp3"></audio>
+
+        <script>
+            const texts = [
+                "Hai sel, pasti kamu kaget liat ginian kan, gapapa sih aku cuma mau ngomong",
+                "i never fallen for anyone the way i’ve fallen for u, walaupun aku tau selama kita deket ini banyak banget cobaannya",
+                "akupun sadar all i want is u, whenever i feel down i just want to be in ur arms",
+                "sorry juga ya selama kita deket ini, mungkin aku masih banyak kurangnya, aku masih kurang bisa ngertiin kamu, masih sering cuek, masih suka ovt",
+                "langsung ke intinya aja ya, walaupun aku tau kita baru deket dan kamu jg baru selesai dgn hub kamu, tp aku udh yakin sm pilihan aku buat kedepannya, aku mau menua bareng sama kamu",
+                "do u want to be my girlfriend",
+            ];
+        
+            let currentIndex = 0;
+            let zoomIndex = 0;
+        
+            function animateSequence() {
+                const button = document.querySelector(".letter-button");
+                const text = document.querySelector(".letter-text");
+                const music = document.getElementById("background-music");
+                const background = document.getElementById("background");
+        
+                button.classList.add("scale-0", "opacity-0");
+                text.classList.add("scale-0", "opacity-0");
+                music.play();
+        
+                // Change background from black to image and apply sequential zoom animation
+                setTimeout(() => {
+                    background.classList.add("bg-image");
+                    applySequentialZoom();
+                }, 300);
+        
+                setTimeout(() => {
+                    showTextAndImage();
+                }, 500);
+            }
+        
+            function applySequentialZoom() {
+                const background = document.getElementById("background");
+                const zoomClasses = [
+                    "zoom-1",
+                    "zoom-2",
+                    "zoom-3",
+                    "zoom-4",
+                    "zoom-5",
+                ];
+        
+                // Remove any existing zoom class
+                zoomClasses.forEach((zoomClass) =>
+                    background.classList.remove(zoomClass)
+                );
+        
+                // Add the current zoom class in sequence
+                background.classList.add(zoomClasses[zoomIndex]);
+        
+                // Increment the zoomIndex for the next sequence, and loop back to start if necessary
+                zoomIndex = (zoomIndex + 1) % zoomClasses.length;
+            }
+        
+            function showTextAndImage() {
+                const textContainer = document.querySelector(".text-container");
+                const imageContainer = document.getElementById("image-container");
+                const buttonOptions = document.querySelector(".button-options");
+                const message = texts[currentIndex];
+        
+                textContainer.innerHTML = "";
+                textContainer.classList.remove("opacity-0");
+                imageContainer.src = `gif${currentIndex + 1}.gif`; // Use gif1.gif through gif6.gif
+        
+                // Show image with pop animation
+                imageContainer.classList.add("opacity-100", "scale-110");
+        
+                message.split("").forEach((char, index) => {
+                    setTimeout(() => {
+                        textContainer.innerHTML += char;
+                    }, 35 * index);
+                });
+        
+                setTimeout(() => {
+                    // After the text has fully appeared, wait for 0.5 seconds, then remove text and image
+                    setTimeout(() => {
+                        imageContainer.classList.remove("scale-110", "opacity-100");
+                        imageContainer.classList.add("scale-0", "opacity-0");
+                        textContainer.classList.add("opacity-0");
+        
+                        // Move to the next text in the array
+                        currentIndex += 1;
+        
+                        if (currentIndex < texts.length) {
+                            setTimeout(() => {
+                                imageContainer.classList.remove("scale-0");
+                                applySequentialZoom();
+                                showTextAndImage(); // Start the sequence for the next text
+                            }, 200); // Delay to allow the shrink animation to complete
+                        } else {
+                            // Show buttons after the last text
+                            buttonOptions.classList.remove("opacity-0");
+                        }
+                    }, 35 * message.length + 100); // Total time of the text animation + 0.5 seconds delay
+                }, 35 * message.length); // Delay based on how long the text animation takes
+            }
+        
+            function acceptProposal() {
+                const textContainer = document.querySelector(".text-container");
+                const buttonOptions = document.querySelector(".button-options");
+        
+                buttonOptions.classList.add("opacity-0");
+                textContainer.classList.add("opacity-0");
+        
+                setTimeout(() => {
+                    textContainer.innerHTML =
+                        "thank u sel udh nerima aku, semoga aku bisa jadi pacar yg baik buat kamu, aku jg bisa jadi orang yg membawa pengaruh positif dalam hidup kamu, dan semoga kita bisa wujudin mimpi mimpi kita kedepannya";
+                    textContainer.classList.remove("opacity-0");
+                }, 500);
+            }
+        
+            function rejectProposal() {
+                const textContainer = document.querySelector(".text-container");
+                const buttonOptions = document.querySelector(".button-options");
+        
+                buttonOptions.classList.add("opacity-0");
+                textContainer.classList.add("opacity-0");
+        
+                setTimeout(() => {
+                    textContainer.innerHTML = "";
+                    textContainer.classList.remove("opacity-0");
+                }, 500);
+            }
+        </script>
+        
+        
+    </body>
+</html>
